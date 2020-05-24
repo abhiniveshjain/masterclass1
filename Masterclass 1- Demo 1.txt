@@ -1,0 +1,254 @@
+provision new instance
+
+switch to root
+
+yum update -y
+
+yum install docker
+
+service docker start
+
+docker --version
+
+==============
+copy server.js
+==============
+
+var http = require('http');
+
+var handleRequest = function(request, response) {
+  console.log('Received request for URL: ' + request.url);
+  response.writeHead(200);
+  response.end('Hello World!');
+};
+var www = http.createServer(handleRequest);
+www.listen(8080);
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+. ~/.nvm/nvm.sh
+nvm install node
+node -e "console.log('Running Node.js ' + process.version)"
+
+docker build -t helloworld:1.0 .
+
+docker run -d -p 8080:8080 helloworld:1.0
+
+
+=======================
+Logs
+====================
+
+login as: ec2-user
+Authenticating with public key "EKS-keypair"
+Last login: Fri May  8 14:32:46 2020 from 14.96.109.218
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-ami/2018.03-release-notes/
+[ec2-user@ip-172-31-49-97 ~]$
+[ec2-user@ip-172-31-49-97 ~]$ sudo su -
+Last login: Fri May  8 14:32:50 UTC 2020 on pts/0
+[root@ip-172-31-49-97 ~]# mkdir docker-demo
+[root@ip-172-31-49-97 ~]# cd docker-demo/
+[root@ip-172-31-49-97 docker-demo]# ls
+[root@ip-172-31-49-97 docker-demo]#
+[root@ip-172-31-49-97 docker-demo]# yum install docker
+Loaded plugins: priorities, update-motd, upgrade-helper
+amzn-main                                                                                                                                        | 2.1 kB  00:00:00
+amzn-updates                                                                                                                                     | 2.5 kB  00:00:00
+Resolving Dependencies
+--> Running transaction check
+---> Package docker.x86_64 0:19.03.6ce-3.57.amzn1 will be installed
+--> Processing Dependency: runc >= 1.0.0 for package: docker-19.03.6ce-3.57.amzn1.x86_64
+--> Processing Dependency: containerd >= 1.3.2 for package: docker-19.03.6ce-3.57.amzn1.x86_64
+--> Processing Dependency: xfsprogs for package: docker-19.03.6ce-3.57.amzn1.x86_64
+--> Processing Dependency: pigz for package: docker-19.03.6ce-3.57.amzn1.x86_64
+--> Processing Dependency: libseccomp.so.2()(64bit) for package: docker-19.03.6ce-3.57.amzn1.x86_64
+--> Running transaction check
+---> Package containerd.x86_64 0:1.3.2-1.3.amzn1 will be installed
+---> Package libseccomp.x86_64 0:2.3.1-2.4.amzn1 will be installed
+---> Package pigz.x86_64 0:2.3.3-1.6.amzn1 will be installed
+---> Package runc.x86_64 0:1.0.0-0.1.20200204.gitdc9208a.1.amzn1 will be installed
+---> Package xfsprogs.x86_64 0:4.5.0-18.23.amzn1 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+========================================================================================================================================================================
+ Package                           Arch                          Version                                                      Repository                           Size
+========================================================================================================================================================================
+Installing:
+ docker                            x86_64                        19.03.6ce-3.57.amzn1                                         amzn-updates                         44 M
+Installing for dependencies:
+ containerd                        x86_64                        1.3.2-1.3.amzn1                                              amzn-updates                         30 M
+ libseccomp                        x86_64                        2.3.1-2.4.amzn1                                              amzn-main                            79 k
+ pigz                              x86_64                        2.3.3-1.6.amzn1                                              amzn-main                            71 k
+ runc                              x86_64                        1.0.0-0.1.20200204.gitdc9208a.1.amzn1                        amzn-updates                        3.1 M
+ xfsprogs                          x86_64                        4.5.0-18.23.amzn1                                            amzn-updates                        1.7 M
+
+Transaction Summary
+========================================================================================================================================================================
+Install  1 Package (+5 Dependent packages)
+
+Total download size: 79 M
+Installed size: 273 M
+Is this ok [y/d/N]: y
+Downloading packages:
+(1/6): libseccomp-2.3.1-2.4.amzn1.x86_64.rpm                                                                                                     |  79 kB  00:00:00
+(2/6): pigz-2.3.3-1.6.amzn1.x86_64.rpm                                                                                                           |  71 kB  00:00:00
+(3/6): containerd-1.3.2-1.3.amzn1.x86_64.rpm                                                                                                     |  30 MB  00:00:02
+(4/6): runc-1.0.0-0.1.20200204.gitdc9208a.1.amzn1.x86_64.rpm                                                                                     | 3.1 MB  00:00:00
+(5/6): xfsprogs-4.5.0-18.23.amzn1.x86_64.rpm                                                                                                     | 1.7 MB  00:00:00
+(6/6): docker-19.03.6ce-3.57.amzn1.x86_64.rpm                                                                                                    |  44 MB  00:00:05
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                                                    14 MB/s |  79 MB  00:00:05
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : libseccomp-2.3.1-2.4.amzn1.x86_64                                                                                                                    1/6
+  Installing : runc-1.0.0-0.1.20200204.gitdc9208a.1.amzn1.x86_64                                                                                                    2/6
+  Installing : containerd-1.3.2-1.3.amzn1.x86_64                                                                                                                    3/6
+  Installing : pigz-2.3.3-1.6.amzn1.x86_64                                                                                                                          4/6
+  Installing : xfsprogs-4.5.0-18.23.amzn1.x86_64                                                                                                                    5/6
+  Installing : docker-19.03.6ce-3.57.amzn1.x86_64                                                                                                                   6/6
+  Verifying  : xfsprogs-4.5.0-18.23.amzn1.x86_64                                                                                                                    1/6
+  Verifying  : libseccomp-2.3.1-2.4.amzn1.x86_64                                                                                                                    2/6
+  Verifying  : containerd-1.3.2-1.3.amzn1.x86_64                                                                                                                    3/6
+  Verifying  : pigz-2.3.3-1.6.amzn1.x86_64                                                                                                                          4/6
+  Verifying  : runc-1.0.0-0.1.20200204.gitdc9208a.1.amzn1.x86_64                                                                                                    5/6
+  Verifying  : docker-19.03.6ce-3.57.amzn1.x86_64                                                                                                                   6/6
+
+Installed:
+  docker.x86_64 0:19.03.6ce-3.57.amzn1
+
+Dependency Installed:
+  containerd.x86_64 0:1.3.2-1.3.amzn1    libseccomp.x86_64 0:2.3.1-2.4.amzn1    pigz.x86_64 0:2.3.3-1.6.amzn1    runc.x86_64 0:1.0.0-0.1.20200204.gitdc9208a.1.amzn1
+  xfsprogs.x86_64 0:4.5.0-18.23.amzn1
+
+Complete!
+[root@ip-172-31-49-97 docker-demo]# service docker start
+Starting cgconfig service:                                 [  OK  ]
+Starting docker:        .                                  [  OK  ]
+[root@ip-172-31-49-97 docker-demo]# docker --version
+Docker version 19.03.6-ce, build 369ce74
+[root@ip-172-31-49-97 docker-demo]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+[root@ip-172-31-49-97 docker-demo]# vi hello.js
+[root@ip-172-31-49-97 docker-demo]# node hello.js
+-bash: node: command not found
+[root@ip-172-31-49-97 docker-demo]# curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 13226  100 13226    0     0   379k      0 --:--:-- --:--:-- --:--:--  379k
+=> Downloading nvm as script to '/root/.nvm'
+
+=> Appending nvm source string to /root/.bashrc
+=> Appending bash_completion source string to /root/.bashrc
+=> Close and reopen your terminal to start using nvm or run the following to use it now:
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[root@ip-172-31-49-97 docker-demo]# . ~/.nvm/nvm.sh
+
+[root@ip-172-31-49-97 docker-demo]# nvm install node
+Downloading and installing node v14.2.0...
+Downloading https://nodejs.org/dist/v14.2.0/node-v14.2.0-linux-x64.tar.xz...
+################################################################################################################################################################# 100.0%
+Computing checksum with sha256sum
+Checksums matched!
+Now using node v14.2.0 (npm v6.14.4)
+Creating default alias: default -> node (-> v14.2.0)
+[root@ip-172-31-49-97 docker-demo]# node -e "console.log('Running Node.js ' + process.version)"
+Running Node.js v14.2.0
+
+
+[root@ip-172-31-49-97 docker-demo]# node hello.js
+Server running at 8080
+
+^C
+
+[root@ip-172-31-49-97 docker-demo]# vi Dockerfile
+
+[root@ip-172-31-49-97 docker-demo]# cat Dockerfile
+FROM node:alpine
+
+WORKDIR /app
+
+ADD . /app
+
+EXPOSE 8080
+
+CMD [ "node", "hello.js" ]
+
+[root@ip-172-31-49-97 docker-demo]# ls
+Dockerfile  hello.js
+
+[root@ip-172-31-49-97 docker-demo]# docker build -t helloworld:1.0 .
+Sending build context to Docker daemon  3.072kB
+Step 1/5 : FROM node:alpine
+alpine: Pulling from library/node
+cbdbe7a5bc2a: Pull complete
+12f343f6cb98: Pull complete
+916b594bfc18: Pull complete
+e52b3a5de1cd: Pull complete
+Digest: sha256:dd23ffe50ad5b5fc6efae6cd71bb42a61e8c11e881b05434afed90734fc33fc9
+Status: Downloaded newer image for node:alpine
+ ---> 87c43f8d8077
+Step 2/5 : WORKDIR /app
+ ---> Running in 55ec541c9812
+Removing intermediate container 55ec541c9812
+ ---> d1431da34efb
+Step 3/5 : ADD . /app
+ ---> 25c871e44a2c
+Step 4/5 : EXPOSE 8080
+ ---> Running in 947242d94612
+Removing intermediate container 947242d94612
+ ---> d8f8fcebd8aa
+Step 5/5 : CMD [ "node", "hello.js" ]
+ ---> Running in 8fa7399f96f0
+Removing intermediate container 8fa7399f96f0
+ ---> 42f437077d09
+Successfully built 42f437077d09
+Successfully tagged helloworld:1.0
+
+[root@ip-172-31-49-97 docker-demo]#
+
+[root@ip-172-31-49-97 docker-demo]# ls
+Dockerfile  hello.js
+
+[root@ip-172-31-49-97 docker-demo]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+helloworld          1.0                 42f437077d09        12 seconds ago      117MB
+node                alpine              87c43f8d8077        47 hours ago        117MB
+
+[root@ip-172-31-49-97 docker-demo]# docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+
+[root@ip-172-31-49-97 docker-demo]# docker run -d -p 8080:8080 helloworld:1.0
+9cc4290a2de4a2b273ce0050e237534fcbd13940d3fba96db8ee1b8a15eb4bd1
+
+[root@ip-172-31-49-97 docker-demo]#
+
+[root@ip-172-31-49-97 docker-demo]# docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+9cc4290a2de4        helloworld:1.0      "docker-entrypoint.s…"   3 seconds ago       Up 2 seconds        0.0.0.0:8080->8080/tcp   wonderful_mahavira
+
+
+[root@ip-172-31-49-97 docker-demo]# curl http://localhost:8080
+Hello World!
+
+[root@ip-172-31-49-97 docker-demo]#
+
+[root@ip-172-31-49-97 docker-demo]# docker stop wonderful_mahavira
+wonderful_mahavira
+
+[root@ip-172-31-49-97 docker-demo]#
+
+[root@ip-172-31-49-97 docker-demo]#  docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+[root@ip-172-31-49-97 docker-demo]#
+

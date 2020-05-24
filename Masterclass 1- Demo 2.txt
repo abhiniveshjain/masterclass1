@@ -1,0 +1,494 @@
+sudo su -
+
+yum update -y
+
+aws configuration
+==================
+
+aws configure
+
+kubectl 
+=========
+
+curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/kubectl
+
+chmod +x ./kubectl
+
+mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+
+echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+
+kubectl version --short --client
+
+
+awscli upgrade
+=============
+
+aws --version
+			aws-cli/1.18.13 Python/2.7.16 Linux/4.14.171-105.231.amzn1.x86_64 botocore/1.15.13
+
+pip install awscli --upgrade --user
+
+aws --version
+			aws-cli/1.18.55 Python/2.7.16 Linux/4.14.171-105.231.amzn1.x86_64 botocore/1.16.5
+
+aws-iam-authenticator
+========================
+
+curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator
+
+chmod +x ./aws-iam-authenticator
+
+mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$PATH:$HOME/bin
+
+echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+
+aws-iam-authenticator help
+
+eksctl
+=======
+
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/0.19.0-rc.0/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+
+sudo mv /tmp/eksctl /usr/local/bin
+
+eksctl version
+
+eksctl create cluster --help
+
+eksctl create cluster --name=awsug-demo-3 --region=us-east-1 --zones=us-east-1b,us-east-1c --node-type=t2.medium 
+
+Check the status from cloud formation page
+
+Once done, run the below command to test the cluster
+
+kubectl get nodes
+kubectl get all --all-namespaces
+
+
+
+===============
+Logs
+==============
+
+login as: ec2-user
+Authenticating with public key "EKS-keypair"
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-ami/2018.03-release-notes/
+4 package(s) needed for security, out of 7 available
+Run "sudo yum update" to apply all updates.
+[ec2-user@ip-172-31-49-97 ~]$
+[ec2-user@ip-172-31-49-97 ~]$ sudo su -
+[root@ip-172-31-49-97 ~]# yum update -y
+Loaded plugins: priorities, update-motd, upgrade-helper
+Resolving Dependencies
+--> Running transaction check
+---> Package aws-cli.noarch 0:1.16.102-1.50.amzn1 will be updated
+---> Package aws-cli.noarch 0:1.18.13-1.54.amzn1 will be an update
+---> Package kernel.x86_64 0:4.14.173-106.229.amzn1 will be installed
+---> Package kernel-tools.x86_64 0:4.14.171-105.231.amzn1 will be updated
+---> Package kernel-tools.x86_64 0:4.14.173-106.229.amzn1 will be an update
+---> Package libicu.x86_64 0:50.1.2-11.12.amzn1 will be updated
+---> Package libicu.x86_64 0:50.2-4.0.amzn1 will be an update
+---> Package libtirpc.x86_64 0:0.2.4-0.8.14.amzn1 will be updated
+---> Package libtirpc.x86_64 0:0.2.4-0.16.15.amzn1 will be an update
+---> Package python27-botocore.noarch 0:1.12.92-2.69.amzn1 will be updated
+---> Package python27-botocore.noarch 0:1.15.13-1.71.amzn1 will be an update
+---> Package python27-colorama.noarch 0:0.2.5-1.7.amzn1 will be updated
+---> Package python27-colorama.noarch 0:0.4.1-4.8.amzn1 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package              Arch      Version                   Repository       Size
+================================================================================
+Installing:
+ kernel               x86_64    4.14.173-106.229.amzn1    amzn-updates     22 M
+Updating:
+ aws-cli              noarch    1.18.13-1.54.amzn1        amzn-updates    2.0 M
+ kernel-tools         x86_64    4.14.173-106.229.amzn1    amzn-updates    144 k
+ libicu               x86_64    50.2-4.0.amzn1            amzn-updates    9.6 M
+ libtirpc             x86_64    0.2.4-0.16.15.amzn1       amzn-updates     94 k
+ python27-botocore    noarch    1.15.13-1.71.amzn1        amzn-updates    5.7 M
+ python27-colorama    noarch    0.4.1-4.8.amzn1           amzn-updates     32 k
+
+Transaction Summary
+================================================================================
+Install  1 Package
+Upgrade  6 Packages
+
+Total download size: 40 M
+Downloading packages:
+(1/7): aws-cli-1.18.13-1.54.amzn1.noarch.rpm               | 2.0 MB   00:00
+(2/7): kernel-tools-4.14.173-106.229.amzn1.x86_64.rpm      | 144 kB   00:00
+(3/7): libicu-50.2-4.0.amzn1.x86_64.rpm                    | 9.6 MB   00:01
+(4/7): libtirpc-0.2.4-0.16.15.amzn1.x86_64.rpm             |  94 kB   00:00
+(5/7): python27-botocore-1.15.13-1.71.amzn1.noarch.rpm     | 5.7 MB   00:00
+(6/7): python27-colorama-0.4.1-4.8.amzn1.noarch.rpm        |  32 kB   00:00
+(7/7): kernel-4.14.173-106.229.amzn1.x86_64.rpm            |  22 MB   00:19
+--------------------------------------------------------------------------------
+Total                                              2.1 MB/s |  40 MB  00:19
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Updating   : python27-botocore-1.15.13-1.71.amzn1.noarch                 1/13
+  Updating   : python27-colorama-0.4.1-4.8.amzn1.noarch                    2/13
+  Updating   : aws-cli-1.18.13-1.54.amzn1.noarch                           3/13
+  Updating   : libicu-50.2-4.0.amzn1.x86_64                                4/13
+  Installing : kernel-4.14.173-106.229.amzn1.x86_64                        5/13
+  Updating   : libtirpc-0.2.4-0.16.15.amzn1.x86_64                         6/13
+  Updating   : kernel-tools-4.14.173-106.229.amzn1.x86_64                  7/13
+  Cleanup    : aws-cli-1.16.102-1.50.amzn1.noarch                          8/13
+  Cleanup    : python27-botocore-1.12.92-2.69.amzn1.noarch                 9/13
+  Cleanup    : python27-colorama-0.2.5-1.7.amzn1.noarch                   10/13
+  Cleanup    : libicu-50.1.2-11.12.amzn1.x86_64                           11/13
+  Cleanup    : libtirpc-0.2.4-0.8.14.amzn1.x86_64                         12/13
+  Cleanup    : kernel-tools-4.14.171-105.231.amzn1.x86_64                 13/13
+intel: model '', path ' intel-ucode/*', kvers ''
+intel: blacklist ''
+intel-06-4f-01: model 'GenuineIntel 06-4f-01', path ' intel-ucode/06-4f-01', kvers ' 4.14.42'
+intel-06-4f-01: blacklist ''
+  Verifying  : kernel-tools-4.14.173-106.229.amzn1.x86_64                                                                                                          1/13
+  Verifying  : python27-colorama-0.4.1-4.8.amzn1.noarch                                                                                                            2/13
+  Verifying  : python27-botocore-1.15.13-1.71.amzn1.noarch                                                                                                         3/13
+  Verifying  : libtirpc-0.2.4-0.16.15.amzn1.x86_64                                                                                                                 4/13
+  Verifying  : aws-cli-1.18.13-1.54.amzn1.noarch                                                                                                                   5/13
+  Verifying  : kernel-4.14.173-106.229.amzn1.x86_64                                                                                                                6/13
+  Verifying  : libicu-50.2-4.0.amzn1.x86_64                                                                                                                        7/13
+  Verifying  : libicu-50.1.2-11.12.amzn1.x86_64                                                                                                                    8/13
+  Verifying  : kernel-tools-4.14.171-105.231.amzn1.x86_64                                                                                                          9/13
+  Verifying  : aws-cli-1.16.102-1.50.amzn1.noarch                                                                                                                 10/13
+  Verifying  : libtirpc-0.2.4-0.8.14.amzn1.x86_64                                                                                                                 11/13
+  Verifying  : python27-colorama-0.2.5-1.7.amzn1.noarch                                                                                                           12/13
+  Verifying  : python27-botocore-1.12.92-2.69.amzn1.noarch                                                                                                        13/13
+
+Installed:
+  kernel.x86_64 0:4.14.173-106.229.amzn1
+
+Updated:
+  aws-cli.noarch 0:1.18.13-1.54.amzn1            kernel-tools.x86_64 0:4.14.173-106.229.amzn1  libicu.x86_64 0:50.2-4.0.amzn1  libtirpc.x86_64 0:0.2.4-0.16.15.amzn1
+  python27-botocore.noarch 0:1.15.13-1.71.amzn1  python27-colorama.noarch 0:0.4.1-4.8.amzn1
+
+Complete!
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]# date
+Fri May  8 14:33:53 UTC 2020
+[root@ip-172-31-49-97 ~]# aws --version
+aws-cli/1.18.13 Python/2.7.16 Linux/4.14.171-105.231.amzn1.x86_64 botocore/1.15.13
+[root@ip-172-31-49-97 ~]#
+
+[root@ip-172-31-49-97 ~]# aws configure
+AWS Access Key ID [None]: 
+AWS Secret Access Key [None]: 
+Default region name [None]: us-east-1
+Default output format [None]:
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]# curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/kubectl
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 55.7M  100 55.7M    0     0  14.9M      0  0:00:03  0:00:03 --:--:-- 14.9M
+[root@ip-172-31-49-97 ~]# chmod +x ./kubectl
+[root@ip-172-31-49-97 ~]# mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+[root@ip-172-31-49-97 ~]# echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+[root@ip-172-31-49-97 ~]# kubectl version --short --client
+Client Version: v1.16.8-eks-e16311
+[root@ip-172-31-49-97 ~]# aws --version
+aws-cli/1.18.13 Python/2.7.16 Linux/4.14.171-105.231.amzn1.x86_64 botocore/1.15.13
+[root@ip-172-31-49-97 ~]# pip install awscli --upgrade --user
+Collecting awscli
+  Downloading https://files.pythonhosted.org/packages/5d/a5/a51f084218ffe7918cf0014b564a1f086a9994100800718b16dd27bce286/awscli-1.18.55-py2.py3-none-any.whl (3.0MB)
+    100% |████████████████████████████████| 3.0MB 404kB/s
+Collecting docutils<0.16,>=0.10 (from awscli)
+  Downloading https://files.pythonhosted.org/packages/3a/dc/bf2b15d1fa15a6f7a9e77a61b74ecbbae7258558fcda8ffc9a6638a6b327/docutils-0.15.2-py2-none-any.whl (548kB)
+    100% |████████████████████████████████| 552kB 2.2MB/s
+Collecting rsa<=3.5.0,>=3.1.2 (from awscli)
+  Downloading https://files.pythonhosted.org/packages/e1/ae/baedc9cb175552e95f3395c43055a6a5e125ae4d48a1d7a924baca83e92e/rsa-3.4.2-py2.py3-none-any.whl (46kB)
+    100% |████████████████████████████████| 51kB 5.9MB/s
+Collecting s3transfer<0.4.0,>=0.3.0 (from awscli)
+  Downloading https://files.pythonhosted.org/packages/69/79/e6afb3d8b0b4e96cefbdc690f741d7dd24547ff1f94240c997a26fa908d3/s3transfer-0.3.3-py2.py3-none-any.whl (69kB)
+    100% |████████████████████████████████| 71kB 9.3MB/s
+Collecting botocore==1.16.5 (from awscli)
+  Downloading https://files.pythonhosted.org/packages/15/a3/d5c03f3ed3503b726ab544356e65b58ca0e8813f2c4bfa23fad056ba96dd/botocore-1.16.5-py2.py3-none-any.whl (6.2MB)
+    100% |████████████████████████████████| 6.2MB 190kB/s
+Collecting PyYAML<5.4,>=3.10; python_version != "3.4" (from awscli)
+  Downloading https://files.pythonhosted.org/packages/64/c2/b80047c7ac2478f9501676c988a5411ed5572f35d1beff9cae07d321512c/PyYAML-5.3.1.tar.gz (269kB)
+    100% |████████████████████████████████| 276kB 4.2MB/s
+Collecting colorama<0.4.4,>=0.2.5; python_version != "3.4" (from awscli)
+  Downloading https://files.pythonhosted.org/packages/c9/dc/45cdef1b4d119eb96316b3117e6d5708a08029992b2fee2c143c7a0a5cc5/colorama-0.4.3-py2.py3-none-any.whl
+Collecting pyasn1>=0.1.3 (from rsa<=3.5.0,>=3.1.2->awscli)
+  Downloading https://files.pythonhosted.org/packages/62/1e/a94a8d635fa3ce4cfc7f506003548d0a2447ae76fd5ca53932970fe3053f/pyasn1-0.4.8-py2.py3-none-any.whl (77kB)
+    100% |████████████████████████████████| 81kB 9.5MB/s
+Collecting futures<4.0.0,>=2.2.0; python_version == "2.7" (from s3transfer<0.4.0,>=0.3.0->awscli)
+  Downloading https://files.pythonhosted.org/packages/d8/a6/f46ae3f1da0cd4361c344888f59ec2f5785e69c872e175a748ef6071cdb5/futures-3.3.0-py2-none-any.whl
+Collecting urllib3<1.26,>=1.20; python_version != "3.4" (from botocore==1.16.5->awscli)
+  Downloading https://files.pythonhosted.org/packages/e1/e5/df302e8017440f111c11cc41a6b432838672f5a70aa29227bf58149dc72f/urllib3-1.25.9-py2.py3-none-any.whl (126kB)
+    100% |████████████████████████████████| 133kB 7.7MB/s
+Collecting python-dateutil<3.0.0,>=2.1 (from botocore==1.16.5->awscli)
+  Downloading https://files.pythonhosted.org/packages/d4/70/d60450c3dd48ef87586924207ae8907090de0b306af2bce5d134d78615cb/python_dateutil-2.8.1-py2.py3-none-any.whl (227kB)
+    100% |████████████████████████████████| 235kB 4.8MB/s
+Collecting jmespath<1.0.0,>=0.7.1 (from botocore==1.16.5->awscli)
+  Downloading https://files.pythonhosted.org/packages/a3/43/1e939e1fcd87b827fe192d0c9fc25b48c5b3368902bfb913de7754b0dc03/jmespath-0.9.5-py2.py3-none-any.whl
+Collecting six>=1.5 (from python-dateutil<3.0.0,>=2.1->botocore==1.16.5->awscli)
+  Downloading https://files.pythonhosted.org/packages/65/eb/1f97cb97bfc2390a276969c6fae16075da282f5058082d4cb10c6c5c1dba/six-1.14.0-py2.py3-none-any.whl
+Installing collected packages: docutils, pyasn1, rsa, futures, urllib3, six, python-dateutil, jmespath, botocore, s3transfer, PyYAML, colorama, awscli
+  Running setup.py install for PyYAML ... done
+Successfully installed PyYAML-5.3.1 awscli-1.18.55 botocore-1.16.5 colorama-0.4.3 docutils-0.15.2 futures-3.3.0 jmespath-0.9.5 pyasn1-0.4.8 python-dateutil-2.8.1 rsa-3.4.2 s3transfer-0.3.3 six-1.14.0 urllib3-1.25.9
+You are using pip version 9.0.3, however version 20.1 is available.
+You should consider upgrading via the 'pip install --upgrade pip' command.
+[root@ip-172-31-49-97 ~]# aws --version
+aws-cli/1.18.55 Python/2.7.16 Linux/4.14.171-105.231.amzn1.x86_64 botocore/1.16.5
+[root@ip-172-31-49-97 ~]# curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/1.16.8/2020-04-16/bin/linux/amd64/aws-iam-authenticator
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 33.6M  100 33.6M    0     0  5491k      0  0:00:06  0:00:06 --:--:-- 5600k
+[root@ip-172-31-49-97 ~]# chmod +x ./aws-iam-authenticator
+[root@ip-172-31-49-97 ~]# mkdir -p $HOME/bin && cp ./aws-iam-authenticator $HOME/bin/aws-iam-authenticator && export PATH=$PATH:$HOME/bin
+[root@ip-172-31-49-97 ~]# echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]# aws-iam-authenticator help
+A tool to authenticate to Kubernetes using AWS IAM credentials
+
+Usage:
+  aws-iam-authenticator [command]
+
+Available Commands:
+  help        Help about any command
+  init        Pre-generate certificate, private key, and kubeconfig files for the server.
+  server      Run a webhook validation server suitable that validates tokens using AWS IAM
+  token       Authenticate using AWS IAM and get token for Kubernetes
+  verify      Verify a token for debugging purpose
+  version     Version will output the current build information
+
+Flags:
+  -i, --cluster-id ID                 Specify the cluster ID, a unique-per-cluster identifier for your aws-iam-authenticator installation.
+  -c, --config filename               Load configuration from filename
+      --feature-gates mapStringBool   A set of key=value pairs that describe feature gates for alpha/experimental features. Options are:
+                                      AllAlpha=true|false (ALPHA - default=false)
+                                      IAMIdentityMappingCRD=true|false (ALPHA - default=false)
+  -h, --help                          help for aws-iam-authenticator
+  -l, --log-format string             Specify log format to use when logging to stderr [text or json] (default "text")
+
+Use "aws-iam-authenticator [command] --help" for more information about a command.
+[root@ip-172-31-49-97 ~]# curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]# sudo mv /tmp/eksctl /usr/local/bin
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]# eksctl version
+0.18.0
+[root@ip-172-31-49-97 ~]# curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/0.19.0/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+
+gzip: stdin: not in gzip format
+tar: Child returned status 1
+tar: Error is not recoverable: exiting now
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]# eksctl version
+0.18.0
+[root@ip-172-31-49-97 ~]# ls -l /usr/local/bin
+total 74244
+-rwxr-xr-x 1 root root 76025856 Apr 27 16:13 eksctl
+[root@ip-172-31-49-97 ~]# rm /usr/local/bin/eksctl
+rm: remove regular file ‘/usr/local/bin/eksctl’? y
+[root@ip-172-31-49-97 ~]# curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/0.19.0-rc.0/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+[root@ip-172-31-49-97 ~]# sudo mv /tmp/eksctl /usr/local/bin
+[root@ip-172-31-49-97 ~]# eksctl version
+0.19.0-rc.0
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]# eksctl --help
+The official CLI for Amazon EKS
+
+Usage: eksctl [command] [flags]
+
+Commands:
+  eksctl create                  Create resource(s)
+  eksctl get                     Get resource(s)
+  eksctl update                  Update resource(s)
+  eksctl upgrade                 Upgrade resource(s)
+  eksctl delete                  Delete resource(s)
+  eksctl set                     Set values
+  eksctl unset                   Unset values
+  eksctl scale                   Scale resources(s)
+  eksctl drain                   Drain resource(s)
+  eksctl utils                   Various utils
+  eksctl completion              Generates shell completion scripts for bash, zsh or fish
+  eksctl version                 Output the version of eksctl
+  eksctl help                    Help about any command
+
+Common flags:
+  -C, --color string   toggle colorized logs (valid options: true, false, fabulous) (default "true")
+  -h, --help           help for this command
+  -v, --verbose int    set log level, use 0 to silence, 4 for debugging and 5 for debugging with AWS debug logging (default 3)
+
+Use 'eksctl [command] --help' for more information about a command.
+
+[root@ip-172-31-49-97 ~]#  eksctl create  --help
+Create resource(s)
+
+Usage: eksctl create [flags]
+
+Commands:
+  eksctl create cluster                 Create a cluster
+  eksctl create nodegroup               Create a nodegroup
+  eksctl create iamserviceaccount       Create an iamserviceaccount - AWS IAM role bound to a Kubernetes service account
+  eksctl create iamidentitymapping      Create an IAM identity mapping
+  eksctl create fargateprofile          Create a Fargate profile
+
+Common flags:
+  -C, --color string   toggle colorized logs (valid options: true, false, fabulous) (default "true")
+  -h, --help           help for this command
+  -v, --verbose int    set log level, use 0 to silence, 4 for debugging and 5 for debugging with AWS debug logging (default 3)
+
+Use 'eksctl create [command] --help' for more information about a command.
+
+[root@ip-172-31-49-97 ~]#  eksctl create cluster --help
+Create a cluster
+
+Usage: eksctl create cluster [flags]
+
+General flags:
+  -n, --name string               EKS cluster name (generated if unspecified, e.g. "scrumptious-hideout-1588951083")
+      --tags stringToString       A list of KV pairs used to tag the AWS resources (e.g. "Owner=John Doe,Team=Some Team") (default [])
+  -r, --region string             AWS region
+      --zones strings             (auto-select if unspecified)
+      --version string            Kubernetes version (valid options: 1.12, 1.13, 1.14, 1.15, 1.16) (default "1.15")
+  -f, --config-file string        load configuration from a file (or stdin if set to '-')
+      --timeout duration          maximum waiting time for any long-running operation (default 25m0s)
+      --install-vpc-controllers   Install VPC controller that's required for Windows workloads
+      --managed                   Create EKS-managed nodegroup
+      --fargate                   Create a Fargate profile scheduling pods in the default and kube-system namespaces onto Fargate
+
+Initial nodegroup flags:
+      --nodegroup-name string          name of the nodegroup (generated if unspecified, e.g. "ng-fed7bf91")
+      --without-nodegroup              if set, initial nodegroup will not be created
+  -t, --node-type string               node instance type (default "m5.large")
+  -N, --nodes int                      total number of nodes (for a static ASG) (default 2)
+  -m, --nodes-min int                  minimum nodes in ASG (default 2)
+  -M, --nodes-max int                  maximum nodes in ASG (default 2)
+      --node-volume-size int           node volume size in GB
+      --node-volume-type string        node volume type (valid options: gp2, io1, sc1, st1) (default "gp2")
+      --max-pods-per-node int          maximum number of pods per node (set automatically if unspecified)
+      --ssh-access                     control SSH access for nodes. Uses ~/.ssh/id_rsa.pub as default key path if enabled
+      --ssh-public-key string          SSH public key to use for nodes (import from local path, or use existing EC2 key pair)
+      --node-ami string                Advanced use cases only. If 'ssm' is supplied (default) then eksctl will use SSM Parameter; if 'auto' is supplied then eksctl will automatically set the AMI based on version/region/instance type; if static is supplied (deprecated), then static AMIs will be used; if any other value is supplied it will override the AMI to use for the nodes. Use with extreme care.
+      --node-ami-family string         Advanced use cases only. If 'AmazonLinux2' is supplied (default), then eksctl will use the official AWS EKS AMIs (Amazon Linux 2); if 'Ubuntu1804' is supplied, then eksctl will use the official Canonical EKS AMIs (Ubuntu 18.04). (default "AmazonLinux2")
+  -P, --node-private-networking        whether to make nodegroup networking private
+      --node-security-groups strings   Attach additional security groups to nodes, so that it can be used to allow extra ingress/egress access from/to pods
+      --node-labels stringToString     Extra labels to add when registering the nodes in the nodegroup, e.g. "partition=backend,nodeclass=hugememory" (default [])
+      --node-zones strings             (inherited from the cluster if unspecified)
+
+Cluster and nodegroup add-ons flags:
+      --asg-access            enable IAM policy for cluster-autoscaler
+      --external-dns-access   enable IAM policy for external-dns
+      --full-ecr-access       enable full access to ECR
+      --appmesh-access        enable full access to AppMesh
+      --alb-ingress-access    enable full access for alb-ingress-controller
+
+VPC networking flags:
+      --vpc-cidr ipNet                 global CIDR to use for VPC (default 192.168.0.0/16)
+      --vpc-private-subnets strings    re-use private subnets of an existing VPC
+      --vpc-public-subnets strings     re-use public subnets of an existing VPC
+      --vpc-from-kops-cluster string   re-use VPC from a given kops cluster
+      --vpc-nat-mode string            VPC NAT mode, valid options: HighlyAvailable, Single, Disable (default "Single")
+
+AWS client flags:
+  -p, --profile string        AWS credentials profile to use (overrides the AWS_PROFILE environment variable)
+      --cfn-role-arn string   IAM role used by CloudFormation to call AWS API on your behalf
+
+Output kubeconfig flags:
+      --kubeconfig string               path to write kubeconfig (incompatible with --auto-kubeconfig) (default "/root/.kube/config")
+      --authenticator-role-arn string   AWS IAM role to assume for authenticator
+      --set-kubeconfig-context          if true then current-context will be set in kubeconfig; if a context is already set then it will be overwritten (default true)
+      --auto-kubeconfig                 save kubeconfig file by cluster name, e.g. "/root/.kube/eksctl/clusters/scrumptious-hideout-1588951083"
+      --write-kubeconfig                toggle writing of kubeconfig (default true)
+
+Common flags:
+  -C, --color string   toggle colorized logs (valid options: true, false, fabulous) (default "true")
+  -h, --help           help for this command
+  -v, --verbose int    set log level, use 0 to silence, 4 for debugging and 5 for debugging with AWS debug logging (default 3)
+
+Use 'eksctl create cluster [command] --help' for more information about a command.
+
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]# set time on
+[root@ip-172-31-49-97 ~]# set timing on
+[root@ip-172-31-49-97 ~]# date
+Fri May  8 15:21:10 UTC 2020
+[root@ip-172-31-49-97 ~]# eksctl create cluster --name=awsug-demo --region=us-east-1 --node-type=t2.medium
+[ℹ]  eksctl version 0.19.0-rc.0
+[ℹ]  using region us-east-1
+[ℹ]  setting availability zones to [us-east-1b us-east-1a]
+[ℹ]  subnets for us-east-1b - public:192.168.0.0/19 private:192.168.64.0/19
+[ℹ]  subnets for us-east-1a - public:192.168.32.0/19 private:192.168.96.0/19
+[ℹ]  nodegroup "ng-79c8eacb" will use "ami-0842e3f57a7f2db2e" [AmazonLinux2/1.15]
+[ℹ]  using Kubernetes version 1.15
+[ℹ]  creating EKS cluster "awsug-demo" in "us-east-1" region with un-managed nodes
+[ℹ]  will create 2 separate CloudFormation stacks for cluster itself and the initial nodegroup
+[ℹ]  if you encounter any issues, check CloudFormation console or try 'eksctl utils describe-stacks --region=us-east-1 --cluster=awsug-demo'
+[ℹ]  CloudWatch logging will not be enabled for cluster "awsug-demo" in "us-east-1"
+[ℹ]  you can enable it with 'eksctl utils update-cluster-logging --region=us-east-1 --cluster=awsug-demo'
+[ℹ]  Kubernetes API endpoint access will use default of {publicAccess=true, privateAccess=false} for cluster "awsug-demo" in "us-east-1"
+[ℹ]  2 sequential tasks: { create cluster control plane "awsug-demo", create nodegroup "ng-79c8eacb" }
+[ℹ]  building cluster stack "eksctl-awsug-demo-cluster"
+[ℹ]  deploying stack "eksctl-awsug-demo-cluster"
+[ℹ]  building nodegroup stack "eksctl-awsug-demo-nodegroup-ng-79c8eacb"
+[ℹ]  --nodes-min=2 was set automatically for nodegroup ng-79c8eacb
+[ℹ]  --nodes-max=2 was set automatically for nodegroup ng-79c8eacb
+[ℹ]  deploying stack "eksctl-awsug-demo-nodegroup-ng-79c8eacb"
+[ℹ]  waiting for the control plane availability...
+[✔]  saved kubeconfig as "/root/.kube/config"
+[ℹ]  no tasks
+[✔]  all EKS cluster resources for "awsug-demo" have been created
+[ℹ]  adding identity "arn:aws:iam::548855059535:role/eksctl-awsug-demo-nodegroup-ng-79-NodeInstanceRole-1910TPIX77QKT" to auth ConfigMap
+[ℹ]  nodegroup "ng-79c8eacb" has 0 node(s)
+[ℹ]  waiting for at least 2 node(s) to become ready in "ng-79c8eacb"
+[ℹ]  nodegroup "ng-79c8eacb" has 2 node(s)
+[ℹ]  node "ip-192-168-11-143.ec2.internal" is ready
+[ℹ]  node "ip-192-168-57-34.ec2.internal" is ready
+[ℹ]  kubectl command should work with "/root/.kube/config", try 'kubectl get nodes'
+[✔]  EKS cluster "awsug-demo" in "us-east-1" region is ready
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]# date
+Fri May  8 15:45:35 UTC 2020
+[root@ip-172-31-49-97 ~]#
+[root@ip-172-31-49-97 ~]# kubectl get nodes
+NAME                             STATUS   ROLES    AGE     VERSION
+ip-192-168-11-143.ec2.internal   Ready    <none>   6m18s   v1.15.11-eks-af3caf
+ip-192-168-57-34.ec2.internal    Ready    <none>   6m12s   v1.15.11-eks-af3caf
+[root@ip-172-31-49-97 ~]# kubectl get all --all-namespaces
+NAMESPACE     NAME                           READY   STATUS    RESTARTS   AGE
+kube-system   pod/aws-node-krl4n             1/1     Running   0          6m36s
+kube-system   pod/aws-node-z6qw9             1/1     Running   0          6m42s
+kube-system   pod/coredns-59dfd6b59f-97dsd   1/1     Running   0          14m
+kube-system   pod/coredns-59dfd6b59f-g8snk   1/1     Running   0          14m
+kube-system   pod/kube-proxy-299qn           1/1     Running   0          6m42s
+kube-system   pod/kube-proxy-r4pwr           1/1     Running   0          6m36s
+
+NAMESPACE     NAME                 TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)         AGE
+default       service/kubernetes   ClusterIP   10.100.0.1    <none>        443/TCP         14m
+kube-system   service/kube-dns     ClusterIP   10.100.0.10   <none>        53/UDP,53/TCP   14m
+
+NAMESPACE     NAME                        DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+kube-system   daemonset.apps/aws-node     2         2         2       2            2           <none>          14m
+kube-system   daemonset.apps/kube-proxy   2         2         2       2            2           <none>          14m
+
+NAMESPACE     NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+kube-system   deployment.apps/coredns   2/2     2            2           14m
+
+NAMESPACE     NAME                                 DESIRED   CURRENT   READY   AGE
+kube-system   replicaset.apps/coredns-59dfd6b59f   2         2         2       14m
+[root@ip-172-31-49-97 ~]#
+
+
+
+
+
+
+
